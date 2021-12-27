@@ -16,15 +16,27 @@ namespace DatabaseServer.Controllers
             _serviceTaskRepository = serviceTaskRepository;
         }
 
+        [Route("/api/task/")]
         [HttpGet]
-        public IActionResult Get(int id)
+        public IActionResult Get()
         {
-            if (id == 0)
-            {
-                var tasks = _serviceTaskRepository.GetAll().ToList();
-                return Ok(tasks);
-            }
+            var tasks = _serviceTaskRepository.GetAll().ToList();
+            return Ok(tasks);
+        }
+
+        [Route("/api/task/id={id}")]
+        [HttpGet]
+        public IActionResult GetById(int id)
+        {
             var task = _serviceTaskRepository.Get(id);
+            return Ok(task);
+        }
+
+        [Route("/api/task/name={name}")]
+        [HttpGet]
+        public IActionResult GetByName(string name)
+        {
+            var task = _serviceTaskRepository.Get(name);
             return Ok(task);
         }
 

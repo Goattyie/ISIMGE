@@ -1,0 +1,27 @@
+﻿@using Common.Models
+@{
+    ViewData["Title"] = "Заказы";
+    Layout = "_Layout";
+}
+
+@model IEnumerable<Order>
+
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td class="bg-warning">Задача: @order.Task.Name</td>
+                                <td class="bg-warning">Цена: @order.Task.Price</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

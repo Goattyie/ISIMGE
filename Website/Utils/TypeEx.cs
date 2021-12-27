@@ -14,5 +14,9 @@ namespace Website.Utils
         {
             return JsonConvert.DeserializeObject<IEnumerable<ServiceTask>>(data);
         }
+        public static IEnumerable<Order> AsOrderList(this string data)
+        {
+            return JsonConvert.DeserializeObject<IEnumerable<Order>>(data);
+        }
     }
 }

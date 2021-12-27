@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
+using Website.Middleware;
 
 namespace Website.Controllers
 {
@@ -36,6 +37,15 @@ namespace Website.Controllers
         [HttpPost]
         public async Task<IActionResult> Tasks(ServiceTask task)
         {
+            var middleware = new CheackDataTaskMiddleware(new CheckTaskInDatabaseMiddleware());
+            try
+            {
+                await middleware.Execute(task);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
             _httpClient = new();
             var json = JsonConvert.SerializeObject(task);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");

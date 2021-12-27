@@ -17,15 +17,18 @@ namespace DatabaseServer.Controllers
         }
         
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(int user_id)
         {
-            var orders = _orderRepository.GetAll();
+            var orders = Enumerable.Empty<Order>();
+            if (user_id == 0)
+                orders = _orderRepository.GetAll();
+            else orders = _orderRepository.GetAll(user_id);
             return Ok(orders);
         }
 
         [Route ("add")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromForm] Order order)
+        public async Task<IActionResult> Add([FromBody] Order order)
         {
             try
             {

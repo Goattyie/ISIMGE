@@ -31,6 +31,11 @@ namespace DatabaseServer.Repositories
             return _db.Tasks.FirstOrDefault(x => x.Id == id);
         }
 
+        public ServiceTask? Get(string name)
+        {
+            return _db.Tasks.FirstOrDefault(x => x.Name == name);
+        }
+
         public IEnumerable<ServiceTask> GetAll()
         {
             return _db.Tasks.AsEnumerable();

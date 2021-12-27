@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using DatabaseServer.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseServer.Repositories
 {
@@ -33,7 +34,12 @@ namespace DatabaseServer.Repositories
 
         public IEnumerable<Order> GetAll()
         {
-            return _db.Orders.AsEnumerable();
+            return _db.Orders.Include(o=>o.Task).AsEnumerable();
+        }
+
+        public IEnumerable<Order> GetAll(int userId)
+        {
+            return _db.Orders.Include(o => o.Task).Where(x=>x.UserId == userId).AsEnumerable();
         }
 
         public async Task SaveAsync()

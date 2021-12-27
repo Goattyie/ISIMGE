@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public IEnumerable<ServiceTask> Tasks { get; set; }
+        public int TaskId { get; set; }
+        public ServiceTask Task { get; set; }
     }
 }

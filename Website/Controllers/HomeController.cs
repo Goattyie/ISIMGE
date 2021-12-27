@@ -21,7 +21,7 @@ namespace Website.Controllers
         public async Task<IActionResult> Services()
         {
             var response = await _httpClient.GetAsync("http://localhost:7270/api/service");
-            var response2 = await _httpClient.GetAsync("http://localhost:7270/api/task");
+            var response2 = await _httpClient.GetAsync("http://localhost:7270/api/task/");
             if(response.IsSuccessStatusCode && response2.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadAsStringAsync();
@@ -37,19 +37,34 @@ namespace Website.Controllers
             return BadRequest();
         }
 
+        [Route("orders")]
+        [HttpGet]
+        public async Task<IActionResult> Orders()
+        {
+            if (Request.Cookies["user_id"] == null) return Ok("Авторизируйтесь.");
+            var response = await _httpClient.GetAsync($"http://localhost:7270/api/order?user_id={Request.Cookies["user_id"]}");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                var orders = data.AsOrderList();
+                return View(orders);
+            }
+            return BadRequest();
+        }
+
         [Route("/order/add")]
         [HttpGet]
         public async Task<IActionResult> Add(int id)
         {
             if (Request.Cookies["user_id"] == null) return Ok("Авторизируйтесь.");
-            var response = await _httpClient.GetAsync($"http://localhost:7270/api/task?id={id}");
+            var response = await _httpClient.GetAsync($"http://localhost:7270/api/task/id={id}");
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadAsStringAsync();
                 var task = JsonConvert.DeserializeObject<ServiceTask>(data);
                 if(task != null)
                 {
-                    var order = new Order { UserId = int.Parse(Request.Cookies["user_id"]), Tasks = new List<ServiceTask> { task } };
+                    var order = new Order { UserId = int.Parse(Request.Cookies["user_id"]), TaskId = task.Id  };
                     var json = JsonConvert.SerializeObject(order);
                     var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
                     response = await _httpClient.PostAsync("http://localhost:7270/api/order/add", httpContent);
